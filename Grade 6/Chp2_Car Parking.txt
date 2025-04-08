@@ -1,0 +1,24 @@
+int ir = 7; //IR sensor OUT is connected to pin 7
+int red = 8; //Red LED is connected to pin 8
+int green = 9; //Green LED is connected to pin 9
+int irout; //This variable is used to store IR sensor output data
+void setup() 
+{
+ pinMode(ir, INPUT);
+ pinMode(red, OUTPUT);
+ pinMode(green, OUTPUT);
+}
+void loop() 
+{
+ irout = digitalRead(ir);
+if(irout == 1) //Condition for parking space is available
+ { 
+ digitalWrite(green, 1);
+ digitalWrite(red, 0);
+ }
+ else //Condition for parking space is not available
+ {
+ digitalWrite(green, 0);
+ digitalWrite(red, 1);
+ }
+}

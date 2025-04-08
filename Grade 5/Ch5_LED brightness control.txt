@@ -1,0 +1,13 @@
+int pot=A0;
+int output=13;
+void setup()
+{
+ pinMode(output, OUTPUT);
+}
+void loop()
+{
+ int reading=analogRead(pot);
+ int bright=reading/4;
+ delay(500);
+ analogWrite(output, bright);
+}

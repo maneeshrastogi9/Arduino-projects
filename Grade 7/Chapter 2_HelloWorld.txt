@@ -1,0 +1,15 @@
+#include <Wire.h> //LiquidCrystal_I2C Library
+#include <LiquidCrystal_I2C.h> //LiquidCrystal_I2C Library
+//set the LCD address to 0x27 for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 16, 2);
+void setup()
+{
+lcd.init (); //initialize the lcd
+//print a message to the lcd.
+lcd.backlight ();
+lcd.setCursor (0, 0); //Location of the message that we are going to print
+lcd.print (“Hello, world!”);
+}
+void loop()
+{
+}

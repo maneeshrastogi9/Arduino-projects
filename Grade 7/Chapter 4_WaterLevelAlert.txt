@@ -1,0 +1,62 @@
+// defines pins numbers
+const int trigPin = 8;
+const int echoPin = 9;
+int green = 3;
+int yellow = 4;
+int red = 5;
+int buzzer = 6;
+// defines variables
+long duration;
+int distance;
+void setup ()
+{
+pinMode(red,OUTPUT);
+pinMode(green,OUTPUT);
+pinMode(yellow,OUTPUT);
+pinMode(buzzer,OUTPUT);
+pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+Serial.begin(9600);
+ }
+void loop()
+{
+// Clears the trigPin
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+// Sets the trigPin on HIGH state for 10 micro seconds
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+// Reads the echoPin, returns the sound wave travel time in microseconds
+duration = pulseIn(echoPin, HIGH);
+// Calculating the distance
+distance= duration/29/2;
+Serial.print(“distance = ”);
+Serial.print(distance);
+Serial.println(“ cm”);
+if(distance>=25)
+{
+digitalWrite(red,1);
+digitalWrite(yellow,0);
+digitalWrite(green,0);
+digitalWrite(buzzer,0);
+Serial.println(“Turn ON the motor tank is empty”);
+}
+else if((distance>=10)&&(distance<25))
+{
+digitalWrite(red,0);
+digitalWrite(yellow,1);
+digitalWrite(green,0);
+digitalWrite(buzzer,0);
+Serial.println(“The tank is half-filled”);
+}
+else
+{
+digitalWrite(red,0);
+digitalWrite(yellow,0);
+digitalWrite(green,1);
+digitalWrite(buzzer,1);
+Serial.println(“Turn OFF the motor tank is full”);
+}
+delay(100);
+}

@@ -1,0 +1,53 @@
+int ir = 4; //IR sensor OUT is connected to pin 4
+int ldr = 5; //LDR module D0 is connected to pin 5
+int yellow = 6; //Yellow LED is connected to pin 6
+int red = 7; //Red LED D0 is connected to pin 7
+int sound = 8; //Buzzer is connected to pin 8
+int irOut; //This variable is used to store IR sensor output data
+int ldrOut; //This variable is used to store LDR module output data
+void setup()
+{
+ pinMode(ir, INPUT);
+ pinMode(ldr, INPUT);
+ pinMode(red, OUTPUT);
+ pinMode(yellow, OUTPUT);
+ pinMode(sound, OUTPUT);
+}
+void loop()
+{irOut = digitalRead(ir); //reading and storing IR sensor output data
+ ldrOut = digitalRead(ldr); //reading and storing LDR module output data
+ 
+ if(irOut == LOW && ldrOut == LOW)
+ {
+ digitalWrite(sound, HIGH);
+ digitalWrite(red, HIGH);
+ digitalWrite(yellow, LOW);
+ delay(500);
+ digitalWrite(red, LOW);
+ digitalWrite(yellow, HIGH);
+ delay(500);
+ 
+ }
+ else if(irOut == LOW && ldrOut == HIGH)
+ {
+ digitalWrite(sound, HIGH);
+ digitalWrite(yellow, LOW);
+ digitalWrite(red, LOW);
+ }
+ else if(irOut == HIGH && ldrOut == LOW)
+ {
+ digitalWrite(sound, LOW);
+ digitalWrite(red, HIGH);
+ digitalWrite(yellow, LOW);
+ delay(500);
+ digitalWrite(red, LOW);
+ digitalWrite(yellow, HIGH);
+ delay(500);
+ }
+ else if(irOut == HIGH && ldrOut == HIGH)
+ {
+ digitalWrite(sound, HIGH);
+ digitalWrite(yellow, LOW);
+ digitalWrite(red, LOW);
+ }
+}

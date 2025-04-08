@@ -1,0 +1,23 @@
+int ldr = A0;
+int alarm = 7;
+int ldrout;
+void setup()
+{
+ pinMode(ldr, INPUT);
+ pinMode(alarm, OUTPUT);
+ Serial.begin(9600);
+}
+void loop()
+{
+ ldrout = analogRead(ldr);
+ Serial.println(ldrout);
+ delay(100);
+ if(ldrout > 300)
+ {
+ digitalWrite(alarm, 1);
+ }
+ else
+ {
+ digitalWrite(alarm, 0);
+ }
+}

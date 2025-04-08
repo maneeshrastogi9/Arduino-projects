@@ -1,0 +1,24 @@
+int ldr = A0;
+int ldrout;
+void setup()
+{
+ // put your setup code here, to run once:
+ pinMode(ldr, INPUT);
+ pinMode(13, OUTPUT); //inbuilt LED
+ Serial.begin(9600);
+}
+void loop()
+{
+ // put your main code here, to run repeatedly:
+ ldrout = analogRead(ldr); //Reading the data from the LDR sensor
+ Serial.println(ldrout); //Printing the LDR output data on the serial monitor
+ delay(100);
+ if(ldrout < 200)
+ {
+ digitalWrite(13, 1); //Turn ON LED
+ }
+ else
+ {
+ digitalWrite(13, 0); //Turn OFF LED
+ }
+}

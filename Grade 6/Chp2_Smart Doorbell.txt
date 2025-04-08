@@ -1,0 +1,22 @@
+int IR = 6; //IR sensor is connected to 6th pin
+int Buzzer = 5; //Buzzzer is connected to 5th pin
+int IrOut; //This variable is used to copy the IR sensor Out put data
+void setup() 
+{
+Serial.begin(9600); //Initialization of serial monitor
+pinMode(IR, INPUT);
+pinMode(Buzzer, OUTPUT);
+}
+void loop() 
+{
+IrOut=digitalRead(IR); //Coping the IR sensor data into "IrOut" variable
+if(IrOut==LOW)
+{
+digitalWrite(Buzzer, HIGH);
+Serial.println(“Visitor at door”);
+}
+else
+{
+digitalWrite(Buzzer, LOW);
+}
+}
