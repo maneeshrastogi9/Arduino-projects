@@ -1,0 +1,92 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <Servo.h>
+
+// I2C LCD configuration
+LiquidCrystal_I2C lcd(0x27, 16,2); // Adjust 0x27 if your LCD uses a different I2C address
+
+// Pin definitions
+const int trigPin = 8;    // Trigger pin of HC-SR04
+const int echoPin = 9;    // Echo pin of HC-SR04
+const int servoPin = 6;   // Servo motor control pin
+
+// Servo motor object
+Servo gateServo;
+
+// Detection distance threshold (in cm)
+const int detectionThreshold = 20; // Adjust based on your setup
+
+void setup() {
+  // Initialize pins
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  
+  // Attach servo motor
+  gateServo.attach(servoPin);
+  gateServo.write(0); // Gate closed position
+  
+  // Initialize LCD
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Toll Gate Ready");
+  delay(2000);
+  lcd.clear();
+
+  // Initialize Serial Monitor
+  Serial.begin(9600);
+  Serial.println("Car Parking Toll Gate Ready");
+}
+
+void loop() {
+  int distance = measureDistance();
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  lcd.setCursor(0, 0);
+  lcd.print("Distance: ");
+  lcd.print(distance);
+  lcd.print(" cm");
+
+  if (distance > 0 && distance <= detectionThreshold) {
+    Serial.println("Car detected! Opening gate...");
+    lcd.setCursor(0, 1);
+    lcd.print("Car Detected   ");
+    openGate();
+    delay(5000); // Keep gate open for 5 seconds
+    closeGate();
+  }
+
+  delay(500); // Short delay before the next reading
+}
+
+// Function to measure distance using the ultrasonic sensor
+int measureDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  int distance = duration * 0.034 / 2; // Calculate distance in cm
+  return distance;
+}
+
+// Function to open the gate
+void openGate() {
+  gateServo.write(90); // Rotate servo to open gate
+  Serial.println("Gate opened");
+  lcd.setCursor(0, 1);
+  lcd.print("Gate Opening   ");
+}
+
+// Function to close the gate
+void closeGate() {
+  gateServo.write(0); // Rotate servo to close gate
+  Serial.println("Gate closed");
+  lcd.setCursor(0, 1);
+  lcd.print("Gate Closing   ");
+}
