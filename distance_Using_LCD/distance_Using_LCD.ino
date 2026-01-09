@@ -1,40 +1,71 @@
-#include <Wire.h> 
+#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-// Set the lcd address to 0x27 for a 16 chars and 2 line display
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+// LCD address 0x27, 20 columns, 4 rows
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
-#define trigPin 12 //Sensor Echo pin connected to Arduino pin 13
-#define echoPin 11 //Sensor Trip pin connected to Arduino pin 12
+// Ultrasonic pins
+#define TRIGGER_PIN 12
+#define ECHO_PIN 11
 
-//Simple program just for testing the HC-SR04 Ultrasonic Sensor with lcd dispaly
-//URL:
+long duration;
+int distance;
 
-void setup()
-{
-pinMode(trigPin, OUTPUT);
-pinMode(echoPin, INPUT);
-lcd.backlight();
-lcd.init(); //Tell Arduino to start your 16 column 2 row lcd
-lcd.setCursor(0,0); //Set lcd cursor to upper left corner, column 0, row 0
-lcd.print("Target Distance:")
-; //Print Message on First Row
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Map the Distance");
+  Serial.println("Map the Distance");
+
+  delay(2000);
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("By _______"); // Your name
+  delay(2000);
+  lcd.clear();
 }
 
 void loop() {
-long duration, distance;
-digitalWrite(trigPin, LOW);
-delayMicroseconds(2);
-digitalWrite(trigPin, HIGH);
-delayMicroseconds(10);
-digitalWrite(trigPin, LOW);
-duration = pulseIn(echoPin, HIGH);
-distance = (duration/2) / 29.1;
+  // Clear LCD
+  lcd.clear();
 
-lcd.setCursor(0,1); //Set cursor to first column of second row
-lcd.print(" "); //Print blanks to clear the row
-lcd.setCursor(0,1); //Set Cursor again to first column of second row
-lcd.print(distance); //Print measured distance
-lcd.print(" cm"); //Print your units.
-delay(250); //pause to let things settle
+  // Trigger ultrasonic pulse
+  digitalWrite(TRIGGER_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN, LOW);
+
+  // Read echo pulse
+  duration = pulseIn(ECHO_PIN, HIGH);
+
+  // Calculate distance
+  distance = duration * 0.034 / 2; // cm
+
+  // Serial output
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  // LCD output (cm)
+  lcd.setCursor(0, 0);
+  lcd.print("Distance: ");
+  lcd.print(distance);
+  lcd.print(" cm");
+
+  // LCD output (meter)
+  lcd.setCursor(0, 1);
+  lcd.print("Distance: ");
+  lcd.print(distance / 100.0);
+  lcd.print(" m");
+
+  delay(1000);
 }
